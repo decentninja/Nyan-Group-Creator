@@ -15,7 +15,6 @@ Master in Science		I expect to learn the methods and tools that I can use for da
 Master in Science	I have been studying computer science but decided to go with human computer interaction for the master rather than computer science, since I prefer the front end part of the computer science, as well as interaction design. I have an overall interest in technology and technological solutions. Other than technological interests, I like sports (ice-hockey, football, etc.), computer games etc. 	I expect to learn how to better visualize information and design interactive interfaces. By doing so, I hope to get a wider scope of usable tools for such interfaces, and how to use them, as well as when not to use them. Furthermore, I hope by finishing  the project I will become a better programmer, designer and project member and/or leader. A bonus would be to have a project result worth putting in my portfolio. 	3	4	5	1	5	6	4	6	6
 Master in Science	I'm a graphic designer and illustrator. I also work with digital media and user experience design. I'm interested in art and photography. Apart from working out in the gym, reading and watching movies are my hobbies. Plus, I like travelling and visiting art galleries. 	I expect to get insight and the proper way of visualising information. As I'm passionate about graphic design and art, visualising information is very intriguing to me. I may use the tools that I learn from this course to help me when it comes to presentation. 	6	2	2	9	9	5	2	2	5
 Master in Science	Computer Games, League of Legends, Psychology, Reading, Gamification, Hiking	Learning how to visualize and understand vast amounts of data. Use it for visualizing human behaviour and identify pattern. Visualizing game data. Make visualizations which help us to understand the world better.	5	5	2	4	9	5	1	5	4
-Bachelor in Science	test	test	1	1	1	1	1	1	1	1	1
 Master in Science	I am into UX design. Love to explore with projects in different domains and platform. Looking forward for the opportunity to play around with oculus rift in the course ;P  Apart from this I love to play basketball and squash. Also I am pretty good in cooking Indian meals :)	From this course I want to learn the technique to take out meaning out of numbers and then create their representation for simple representation.  Key things to get out : - how to interpret data  - tools to use - current practices 	6	4	6	6	8	6	6	7	8
 Master in Science	I love reading about humand mind, how we precieve, understand things, make decisions etc. As I did my Bachelor in International Business economic hirtory is also one of the main subjects I read about. Lately I have have started to read about business analysis and interactin design as that is really closely related to my work as an analyst in an software development company. 	I mainly hope to use the skills in my job working as an analyst. I hope that it will enable me to suggest visully easier to grasp information presentation and therefore give my company's work as an analys a competitive advantage over the regular IT solution.   In addition to that I hope that that will enable me to make a better framework to analyse the analysing process itself in our company. Our hopes are that we could develop a fairly concrete framework which could hel our future analysts to start off their work. It is very important tat the framework or its key pillars would be visiually easily graspable. 	4	3	7	8	6	2	1	1	3
 Master in Science	I am a two year master student. My passion is game design and visualization. I have some knowladge about modeling and design some I have learned in lectures some I learned by myself (unity, blender, 3DS Max, photoshop etc) . I am really interested in computer games (not indie games rather big games with graphics ). I am interested in animation creation and simulation with 3d objects. 	I expect to learn about creating interactive applications either to web or other platform. I expect to gain deeper insight about visual models and how to develop such models.  I expect to use information I learned here developing commercial applications. 	6	3	4	3	6	6	4	4	2
@@ -99,11 +98,23 @@ export const data = raw.split("\n").map((row, j) => {
         id: n++,
         values: {}
     };
+    let level = 0;
+    let max = 0;
+    let maxkey = 0;
     row.split("\t").forEach((k, i) => {
         if(i < 3)
             obj[text[i]] = k;
-        else 
-            obj.values[values[i-3]] = parseInt(k)
+        else {
+            const val = parseInt(k);
+            level += val;
+            if(val > max) {
+                max = val;
+                maxkey = values[i-3];
+            }
+            obj.values[values[i-3]] = val
+        }
     });
+    obj.bestat = maxkey;
+    obj.level = level;
     return obj;
 });
