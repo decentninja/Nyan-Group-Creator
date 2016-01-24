@@ -81,7 +81,7 @@ const text = [
     "description",
     "expections"
 ];
-const values = [
+export const values = [
     "information visualization",
     "statistical",
     "mathematics",
