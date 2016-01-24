@@ -108,3 +108,4 @@ for(var i = 0; i < 75; i++) {
     var thing = s.traineeIndex[i]
     console.log(i, thing.x, thing.y);
 }
+
