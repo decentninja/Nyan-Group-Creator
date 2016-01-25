@@ -43,7 +43,7 @@ class GuyStack extends React.Component {
                     }
                     return <div key={i} style={style}></div>
                 })}
-                <span style={{fontSize: 8}}>{data.id}</span>
+                <span style={{fontSize: 8, textAlign: "center"}}>{data.id}</span>
                 {this.state.hover ? <div style={{
                                                     position: "absolute",
                                                     fontSize: "75%",
@@ -72,7 +72,10 @@ function Bunch({selection}) {
     return (
         <div className="row" style={{display: "flex", direction: "row", alignItems: "center"}}>
             <div className="column">
-                <PieChart slices={[{color: "blue", value: 3}]} />
+                <PieChart slices={values.map((valuename) => ({
+                    color: colormap(valuename),
+                    value: selection.reduce((b, person) => person.values[valuename] + b, 0)
+                }))} />
             </div>
             <div className="column column-75" style={{
                 display: "flex",
