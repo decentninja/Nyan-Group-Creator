@@ -37,7 +37,7 @@ class GuyStack extends React.Component {
                 <span style={{backgroundColor: colormap(data.bestat), margin: 1.5, width: 7, height: 7, borderRadius: 5}}></span>
                 {Object.keys(data.values).map((k, i) => {
                     const style = {
-                        height: 5 * data.values[k],
+                        height: 1.5 * data.values[k],
                         width: "10px",
                         backgroundColor: colormap(k),
                     }
@@ -77,7 +77,7 @@ function Bunch({selection}) {
                     value: selection.reduce((b, person) => person.values[valuename] + b, 0)
                 }))} />
             </div>
-            <div className="column column-75" style={{
+            <div className="column column-90" style={{
                 display: "flex",
                 flexDirection: "row"
             }}>
@@ -91,18 +91,25 @@ class App extends React.Component {
     render() {
         return (
             <div>
+                <h1>Group Creator</h1>
                 <div className="row">
                     <div className="column">
-                        <h1>Group Creator</h1>
+                        <p>
+                            Write description here
+                        </p>
                     </div>
-                    <table className="column">
-                        <tbody>
-                            {values.map((valuename) => 
-                                <tr style={{fontSize: "80%"}} key={valuename}>
+                    <table className="column column-60">
+                        <tbody style={{fontSize: "80%"}}>
+                            <tr>
+                                {values.map((valuename) => 
                                     <td style={{padding: 3, backgroundColor: colormap(valuename)}}></td>
-                                    <td style={{padding: 3}} >{valuename}</td>
-                                </tr>
-                            )}
+                                )}
+                            </tr>
+                            <tr>
+                                {values.map((valuename) => 
+                                    <td style={{padding: 3}}>{valuename}</td>
+                                )}
+                            </tr>
                         </tbody>
                     </table>
                 </div>
