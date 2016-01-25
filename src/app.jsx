@@ -61,16 +61,16 @@ class GuyStack extends React.Component {
 
 
 // Group or other collection of people
-function Bunch({selection}) {
+function Bunch({people}) {
     let numberofmain = {};
     values.forEach((valuename) => {
         numberofmain[valuename] = 0;
     });
-    selection.forEach((person) => {
+    people.forEach((person) => {
         numberofmain[person.bestat]++;
     });
     return (
-        <div className="row" style={{display: "flex", direction: "row", alignItems: "center"}}>
+        <div className="row">
             <div className="column">
                 <RadarChart data={{
                     labels: values,
@@ -78,12 +78,12 @@ function Bunch({selection}) {
                         label: "test",
                         pointColor: "rgba(220, 220, 220, 0)",
                         pointStrokeColor: "rgba(220, 220, 0, 0)",
-                        data: values.map((valuename) => selection.reduce((b, person) => person.values[valuename] + b, 0))
+                        data: values.map((valuename) => people.reduce((b, person) => person.values[valuename] + b, 0))
                     }]
                 }} options={{
                     scaleOverride: true,
-                    scaleSteps: 100,
-                    scaleStepWidth: 5,
+                    scaleSteps: 10,
+                    scaleStepWidth: 50,
                     scaleStartValue: 0,
                     responsive: true,
                     animation: false,
@@ -93,11 +93,50 @@ function Bunch({selection}) {
                 display: "flex",
                 flexDirection: "row"
             }}>
-                {selection.map((person) => <GuyStack key={person.id} data={person}/>)}
+                {people.length == 0 ? "Empty Group. Drag people (colored sticks) here." : people.sort((a, b) => 10000 * (b.level - a.level) + (b.id - a.id)).map((person) => <GuyStack key={person.id} data={person}/>)}
             </div>
         </div>
     );
 }
+
+class Groups extends React.Component {
+    constructor(props) {
+        super(props);
+        this.state = localStorage.getItem("storage") || {
+            groups: [[]],
+            unpicked: props.defaultdata
+        }
+    }
+    add_group() {
+        this.setState({
+            groups: this.state.groups.concat([[]])
+        });
+    }
+    remove_group(i) {
+        let removed = this.state.groups[i];
+        this.setState({
+            groups: this.state.groups.slice(0, i).concat(this.state.groups.slice(i+1)),
+            unpicked: this.state.unpicked.concat(removed)
+        });
+    }
+    render() {
+        return (
+            <div>
+                <h2>Unpicked</h2>
+                <Bunch people={this.state.unpicked} />
+                <h2>Groups</h2>
+                {this.state.groups.length == 0 ? "No groups yet. Press ADD GROUP." : this.state.groups.map((group, i) => <div className="row">
+                        <Bunch className="column" people={group} />
+                        <div className="column column-10">
+                            <button onClick={() => this.remove_group(i)}>Remove</button>
+                        </div>
+                    </div>)}
+                <button onClick={this.add_group.bind(this)}>Add Group</button>
+            </div>
+        );
+    }
+}
+
 
 class App extends React.Component {
     render() {
@@ -107,7 +146,7 @@ class App extends React.Component {
                 <div className="row">
                     <div className="column">
                         <p>
-                            Group Creator is a visual and interactive tool for creating groups from quantitative data. Drag and drop member, represented as lines into groups and see the update realtime. You can at any moment undo you actions with ctrl/cmd-z. All data is saved in your browser (local storage).
+                            Group Creator is a visual and interactive tool for creating groups from quantitative data. Drag and drop member, represented as colored sticks into groups and see the update realtime. You can at any moment undo you actions with ctrl/cmd-z. All data is saved in your browser (local storage).
                         </p>
                     </div>
                     <table className="column column-60">
@@ -125,8 +164,7 @@ class App extends React.Component {
                         </tbody>
                     </table>
                 </div>
-                <h2>Everyone</h2>
-                <Bunch selection={data.sort((a, b) => b.level - a.level)} />
+                <Groups defaultdata={data} />
             </div>
         )
     }
