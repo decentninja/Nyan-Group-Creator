@@ -81,15 +81,15 @@ const text = [
     "expections"
 ];
 export const values = [
-    "information visualization",
-    "statistical",
-    "mathematics",
-    "drawing and artistic",
-    "computer usage",
-    "programming",
-    "computer graphics programming",
-    "human-computer interaction programming",
-    "user experience evaluation"
+    "Visualization",
+    "Statistical",
+    "Math",
+    "Artistic",
+    "Computer usage",
+    "Programming",
+    "Graphics",
+    "HCI",
+    "UX"
 ];
 
 let n = 0;

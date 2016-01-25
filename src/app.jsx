@@ -1,12 +1,16 @@
 import React from "react"
 import ReactDOM from "react-dom"
 import {data, values} from "./dataparsing.js"
+import PieChart from "react-simple-pie-chart"
 
 
 function colormap(k) {
     const i = values.indexOf(k);
     return `hsl(${i * 360 / 9.}, 100%, 50%)`
 }
+
+
+const sep = (what) => <span style={{marginRight: 5}}>{what}</span>
 
 class GuyStack extends React.Component {
     constructor(props) {
@@ -30,7 +34,7 @@ class GuyStack extends React.Component {
         }
         return (
             <div onMouseOver={this.over.bind(this)} onMouseOut={this.out.bind(this)} style={style}>
-                <span style={{fontSize: 8}}>{data.level}</span>
+                <span style={{backgroundColor: colormap(data.bestat), margin: 1.5, width: 7, height: 7, borderRadius: 5}}></span>
                 {Object.keys(data.values).map((k, i) => {
                     const style = {
                         height: 5 * data.values[k],
@@ -39,13 +43,16 @@ class GuyStack extends React.Component {
                     }
                     return <div key={i} style={style}></div>
                 })}
-                {this.state.hover ? <div style={{position: "absolute", fontSize: "75%"}}>
-                    #{data.id}
-                    L{data.level}
-                    B{data.bestat}
-                    D{data.degree}
-                    {data.description}
-                    {data.expections}
+                <span style={{fontSize: 8}}>{data.id}</span>
+                {this.state.hover ? <div style={{
+                                                    position: "absolute",
+                                                    fontSize: "75%",
+                                                }}>
+                    {sep("L" + data.level)}
+                    {sep(data.bestat)}
+                    {sep(data.degree)}
+                    {sep(data.description)}
+                    {sep(data.expections)}
                 </div> : ""}
             </div>
         )
@@ -53,21 +60,49 @@ class GuyStack extends React.Component {
 }
 
 
-function Bunch({selected, selection}) {
+// Group or other collection of people
+function Bunch({selection}) {
+    let numberofmain = {};
+    values.forEach((valuename) => {
+        numberofmain[valuename] = 0;
+    });
+    selection.forEach((person) => {
+        numberofmain[person.bestat]++;
+    });
     return (
-        <div style={{
-            display: "flex",
-            flexDirection: "row"
-        }}>
-        {selection.map((person) => <GuyStack key={person.id} data={person}/>)}
-    </div>);
+        <div className="row" style={{display: "flex", direction: "row", alignItems: "center"}}>
+            <div className="column">
+                <PieChart slices={[{color: "blue", value: 3}]} />
+            </div>
+            <div className="column column-75" style={{
+                display: "flex",
+                flexDirection: "row"
+            }}>
+                {selection.map((person) => <GuyStack key={person.id} data={person}/>)}
+            </div>
+        </div>
+    );
 }
 
 class App extends React.Component {
     render() {
         return (
             <div>
-                <h1>Group Creator</h1>
+                <div className="row">
+                    <div className="column">
+                        <h1>Group Creator</h1>
+                    </div>
+                    <table className="column">
+                        <tbody>
+                            {values.map((valuename) => 
+                                <tr style={{fontSize: "80%"}} key={valuename}>
+                                    <td style={{padding: 3, backgroundColor: colormap(valuename)}}></td>
+                                    <td style={{padding: 3}} >{valuename}</td>
+                                </tr>
+                            )}
+                        </tbody>
+                    </table>
+                </div>
                 <h2>Everyone</h2>
                 <Bunch selection={data.sort((a, b) => b.level - a.level)} />
             </div>
