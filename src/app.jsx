@@ -1,7 +1,7 @@
 import React from "react"
 import ReactDOM from "react-dom"
 import {data, values} from "./dataparsing.js"
-import PieChart from "react-simple-pie-chart"
+var RadarChart = require("react-chartjs").Radar;
 
 
 function colormap(k) {
@@ -72,12 +72,24 @@ function Bunch({selection}) {
     return (
         <div className="row" style={{display: "flex", direction: "row", alignItems: "center"}}>
             <div className="column">
-                <PieChart slices={values.map((valuename) => ({
-                    color: colormap(valuename),
-                    value: selection.reduce((b, person) => person.values[valuename] + b, 0)
-                }))} />
+                <RadarChart data={{
+                    labels: values,
+                    datasets: [{
+                        label: "test",
+                        pointColor: "rgba(220, 220, 220, 0)",
+                        pointStrokeColor: "rgba(220, 220, 0, 0)",
+                        data: values.map((valuename) => selection.reduce((b, person) => person.values[valuename] + b, 0))
+                    }]
+                }} options={{
+                    scaleOverride: true,
+                    scaleSteps: 100,
+                    scaleStepWidth: 5,
+                    scaleStartValue: 0,
+                    responsive: true,
+                    animation: false,
+                }}/>
             </div>
-            <div className="column column-90" style={{
+            <div className="column column-75" style={{
                 display: "flex",
                 flexDirection: "row"
             }}>
@@ -95,19 +107,19 @@ class App extends React.Component {
                 <div className="row">
                     <div className="column">
                         <p>
-                            Write description here
+                            Group Creator is a visual and interactive tool for creating groups from quantitative data. Drag and drop member, represented as lines into groups and see the update realtime. You can at any moment undo you actions with ctrl/cmd-z. All data is saved in your browser (local storage).
                         </p>
                     </div>
                     <table className="column column-60">
                         <tbody style={{fontSize: "80%"}}>
                             <tr>
                                 {values.map((valuename) => 
-                                    <td style={{padding: 3, backgroundColor: colormap(valuename)}}></td>
+                                    <td key={valuename} style={{padding: 3, backgroundColor: colormap(valuename)}}></td>
                                 )}
                             </tr>
                             <tr>
                                 {values.map((valuename) => 
-                                    <td style={{padding: 3}}>{valuename}</td>
+                                    <td key={valuename} style={{padding: 3}}>{valuename}</td>
                                 )}
                             </tr>
                         </tbody>
