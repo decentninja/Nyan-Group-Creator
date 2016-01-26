@@ -25,15 +25,19 @@ class GuyStack extends React.Component {
     out() {
         this.setState({hover: false});
     }
+    dragStart(event) {
+        event.dataTransfer.setData("text", JSON.stringify(this.props.data));
+    }
     render() {
         let data = this.props.data;
         const style = {
             display: "flex",
             flexDirection: "column",
-            justifyContent: "center"
+            justifyContent: "center",
+            marginTop: this.state.hover ? -10 : 0
         }
         return (
-            <div onMouseOver={this.over.bind(this)} onMouseOut={this.out.bind(this)} style={style}>
+            <div draggable="true" onDragStart={this.dragStart.bind(this)} onMouseOver={this.over.bind(this)} onMouseOut={this.out.bind(this)} style={style}>
                 <span style={{backgroundColor: colormap(data.bestat), margin: 1.5, width: 7, height: 7, borderRadius: 5}}></span>
                 {Object.keys(data.values).map((k, i) => {
                     const style = {
@@ -44,16 +48,6 @@ class GuyStack extends React.Component {
                     return <div key={i} style={style}></div>
                 })}
                 <span style={{fontSize: 8, textAlign: "center"}}>{data.id}</span>
-                {this.state.hover ? <div style={{
-                                                    position: "absolute",
-                                                    fontSize: "75%",
-                                                }}>
-                    {sep("L" + data.level)}
-                    {sep(data.bestat)}
-                    {sep(data.degree)}
-                    {sep(data.description)}
-                    {sep(data.expections)}
-                </div> : ""}
             </div>
         )
     }
@@ -61,7 +55,7 @@ class GuyStack extends React.Component {
 
 
 // Group or other collection of people
-function Bunch({people}) {
+function Bunch({people, onDrop}) {
     let numberofmain = {};
     values.forEach((valuename) => {
         numberofmain[valuename] = 0;
@@ -70,7 +64,7 @@ function Bunch({people}) {
         numberofmain[person.bestat]++;
     });
     return (
-        <div className="row">
+        <div onDrop={(e) => onDrop(e)} onDragOver={(e) => e.preventDefault()} className="row">
             <div className="column">
                 <RadarChart data={{
                     labels: values,
@@ -119,14 +113,28 @@ class Groups extends React.Component {
             unpicked: this.state.unpicked.concat(removed)
         });
     }
+    move(e, to) {
+        e.preventDefault(); // Is this needed?
+        let data;
+        try {
+            data = JSON.parse(event.dataTransfer.getData('text'));
+        } catch (e) {
+            return;
+        }
+        if(to == "unpicked") {
+
+        } else {
+            // WIP
+        }
+    }
     render() {
         return (
             <div>
                 <h2>Unpicked</h2>
-                <Bunch people={this.state.unpicked} />
+                <Bunch people={this.state.unpicked} onDrop={(e) => this.move(e, 'unpicked')} />
                 <h2>Groups</h2>
-                {this.state.groups.length == 0 ? "No groups yet. Press ADD GROUP." : this.state.groups.map((group, i) => <div className="row">
-                        <Bunch className="column" people={group} />
+                {this.state.groups.length == 0 ? "No groups yet. Press ADD GROUP." : this.state.groups.map((group, i) => <div key={i} className="row">
+                        <Bunch className="column" people={group} onDrop={(e) => this.move(e, i)} />
                         <div className="column column-10">
                             <button onClick={() => this.remove_group(i)}>Remove</button>
                         </div>
