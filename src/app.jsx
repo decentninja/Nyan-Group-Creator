@@ -82,19 +82,24 @@ function Bunch({people, onDrop}) {
 class Groups extends React.Component {
     constructor(props) {
         super(props);
-        this.state = localStorage.getItem("storage") || {
+        this.state = JSON.parse(localStorage.getItem("storage")) || {
             groups: [[]],
             unpicked: props.defaultdata
         }
     }
+    save(data) {
+        this.setState(data, () => {
+            localStorage.setItem("storage", JSON.stringify(this.state));
+        });
+    }
     add_group() {
-        this.setState({
+        this.save({
             groups: this.state.groups.concat([[]])
         });
     }
     remove_group(i) {
         let removed = this.state.groups[i];
-        this.setState({
+        this.save({
             groups: this.state.groups.slice(0, i).concat(this.state.groups.slice(i+1)),
             unpicked: this.state.unpicked.concat(removed)
         });
@@ -116,7 +121,7 @@ class Groups extends React.Component {
         } else {
             groups[to].push(data);
         }
-        this.setState({
+        this.save({
             groups,
             unpicked
         });
@@ -127,7 +132,6 @@ class Groups extends React.Component {
                 group.reduce((b, person) =>
                     b + person.values[valuename],
                     0)))));
-        console.log(largest_skill);
         return (
             <div>
                 <h2>Unpicked</h2>
