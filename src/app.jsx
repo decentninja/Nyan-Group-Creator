@@ -53,6 +53,10 @@ class GuyStack extends React.Component {
     }
 }
 
+const row = {
+    display: "flex",
+    flexDirection: "row"
+}
 
 // Group or other collection of people
 function Bunch({people, onDrop}) {
@@ -64,29 +68,11 @@ function Bunch({people, onDrop}) {
         numberofmain[person.bestat]++;
     });
     return (
-        <div onDrop={(e) => onDrop(e)} onDragOver={(e) => e.preventDefault()} className="row">
-            <div className="column">
-                <RadarChart data={{
-                    labels: values,
-                    datasets: [{
-                        label: "test",
-                        pointColor: "rgba(220, 220, 220, 0)",
-                        pointStrokeColor: "rgba(220, 220, 0, 0)",
-                        data: values.map((valuename) => people.reduce((b, person) => person.values[valuename] + b, 0))
-                    }]
-                }} options={{
-                    scaleOverride: true,
-                    scaleSteps: 10,
-                    scaleStepWidth: 50,
-                    scaleStartValue: 0,
-                    responsive: true,
-                    animation: false,
-                }}/>
+        <div onDrop={(e) => onDrop(e)} onDragOver={(e) => e.preventDefault()} className="column" style={row}>
+            <div className="column column-10" style={{fontSize: 40, textAlign: "center"}}>
+                {people.length}
             </div>
-            <div className="column column-75" style={{
-                display: "flex",
-                flexDirection: "row"
-            }}>
+            <div className="column column-60" style={row}>
                 {people.length == 0 ? "Empty Group. Drag people (colored sticks) here." : people.sort((a, b) => 10000 * (b.level - a.level) + (b.id - a.id)).map((person) => <GuyStack key={person.id} data={person}/>)}
             </div>
         </div>
@@ -136,12 +122,38 @@ class Groups extends React.Component {
         });
     }
     render() {
+        const largest_skill = Math.max(...values.map((valuename) =>
+            Math.max(...this.state.groups.map((group) =>
+                group.reduce((b, person) =>
+                    b + person.values[valuename],
+                    0)))));
+        console.log(largest_skill);
         return (
             <div>
                 <h2>Unpicked</h2>
-                <Bunch people={this.state.unpicked} onDrop={(e) => this.move(e, 'unpicked')} />
+                <div className="row">
+                    <Bunch people={this.state.unpicked} onDrop={(e) => this.move(e, 'unpicked')} />
+                    </div>
                 <h2>Groups</h2>
                 {this.state.groups.length == 0 ? "No groups yet. Press ADD GROUP." : this.state.groups.map((group, i) => <div key={i} className="row">
+                        <div className="column column-20">
+                            <RadarChart redraw data={{
+                                labels: values,
+                                datasets: [{
+                                    label: "test",
+                                    pointColor: "rgba(220, 220, 220, 0)",
+                                    pointStrokeColor: "rgba(220, 220, 0, 0)",
+                                    data: values.map((valuename) => group.reduce((b, person) => person.values[valuename] + b, 0))
+                                }]
+                            }} options={{
+                                scaleOverride: true,
+                                scaleSteps: 1,
+                                scaleStepWidth: largest_skill,
+                                scaleStartValue: 0,
+                                responsive: true,
+                                animation: false,
+                            }}/>
+                        </div>
                         <Bunch className="column" people={group} onDrop={(e) => this.move(e, i)} />
                         <div className="column column-10">
                             <button onClick={() => this.remove_group(i)}>Remove</button>
