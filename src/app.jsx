@@ -117,15 +117,23 @@ class Groups extends React.Component {
         e.preventDefault(); // Is this needed?
         let data;
         try {
-            data = JSON.parse(event.dataTransfer.getData('text'));
+            data = JSON.parse(e.dataTransfer.getData('text'));
         } catch (e) {
+            console.error(e);
             return;
         }
+        let notthatguy = (person) => person.id != data.id;
+        let groups = this.state.groups.map((group) => group.filter(notthatguy));
+        let unpicked = this.state.unpicked.filter(notthatguy);
         if(to == "unpicked") {
-
+            unpicked.push(data);
         } else {
-            // WIP
+            groups[to].push(data);
         }
+        this.setState({
+            groups,
+            unpicked
+        });
     }
     render() {
         return (
