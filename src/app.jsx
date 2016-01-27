@@ -69,7 +69,7 @@ function Bunch({people, onDrop}) {
     });
     return (
         <div onDrop={(e) => onDrop(e)} onDragOver={(e) => e.preventDefault()} className="column" style={row}>
-            <div className="column column-10" style={{fontSize: 40, textAlign: "center"}}>
+            <div className="column column-10" style={{fontSize: 40, display: "flex", justifyContent: "center", flexDirection: "column"}}>
                 {people.length}
             </div>
             <div className="column column-60" style={row}>
@@ -139,7 +139,7 @@ class Groups extends React.Component {
                     <Bunch people={this.state.unpicked} onDrop={(e) => this.move(e, 'unpicked')} />
                     </div>
                 <h2>Groups</h2>
-                {this.state.groups.length == 0 ? "No groups yet. Press ADD GROUP." : this.state.groups.map((group, i) => <div key={i} className="row">
+                {this.state.groups.length == 0 ? "No groups yet. Press ADD GROUP." : this.state.groups.map((group, i) => <div key={i} className="row" style={{marginBottom: 10}}>
                         <div className="column column-20">
                             <RadarChart redraw data={{
                                 labels: values,
