@@ -20,7 +20,7 @@ function GuyStack({data}) {
         marginTop: data.hover ? -10 : 0
     }
     return (
-        <div draggable="true" onDragStart={dispatch({type: "drag person", person: data})} onMouseOver={dispatch({type: "select person", id: data.id})} onMouseOut={dispatch({type: "deselect person"})} style={style}>
+        <div draggable="true" onDragStart={dispatch({type: "drag person", person: data})} onMouseOver={dispatch({type: "select person", person: data})} onMouseOut={dispatch({type: "deselect person"})} style={style}>
             <span style={{backgroundColor: colormap(data.bestat), margin: 1.5, width: 7, height: 7, borderRadius: 5}}></span>
             {Object.keys(data.values).map((k, i) => {
                 const style = {

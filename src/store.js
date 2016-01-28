@@ -38,7 +38,6 @@ export function groupbuilding(state=default_state, action) {
     case "drag person":
         return Object.assign({}, state, {dragging: action.person});
     case "drop person":
-        console.log("state.dragging.id", state.dragging.id);
         let notthatguy = (person) => person.id != state.dragging.id;
         let groups2 = state.groups.map((group) => group.filter(notthatguy));
         let unpicked = state.unpicked.filter(notthatguy);
@@ -48,6 +47,12 @@ export function groupbuilding(state=default_state, action) {
         else
             newstate.groups[action.on].push(state.dragging)
         return newstate;
+    case "select person":
+        const hoverate = (person) => Object.assign({}, person, {hover: action.person.id == person.id ? true : undefined});
+        return Object.assign({}, state, {
+            groups: state.groups.map((group) => group.map(hoverate)),
+            unpicked: state.unpicked.map(hoverate)
+        });
     default:
         return state;
     }

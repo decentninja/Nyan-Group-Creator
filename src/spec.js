@@ -73,3 +73,10 @@ export function from_unpicked_to_group(test) {
     test.deepEqual(store.getState().unpicked, [], "unpicked");
     test.done();
 };
+
+export function select_n_deselect_by_hover(test) {
+    let store = createStore(groupbuilding, Object.assign({}, this.store.getState(), {unpicked: [{id: 0}], dragging: {id: 0}}));
+    store.dispatch({type: "select person", person: {id: 0}});
+    test.deepEqual(store.getState().unpicked[0], {id: 0, hover: true});
+    test.done();
+};
