@@ -7,14 +7,15 @@ const default_state = {
     unpicked: []
 };
 
-function groupbuilding(state=default_state, action) {
+export function groupbuilding(state=default_state, action) {
     switch(action.type) {
     case "add people":
-        const not_already_added = action.one.filter((person) => state.everyone.filter((other) => other.id == person.id).length == 0);
+        const not_already_added = action.people.filter((person) => state.everyone.filter((other) => other.id == person.id).length == 0);
+        console.log(not_already_added);
         return {
-            unpicked: unpicked.concat([notthatguy]),
+            unpicked: state.unpicked.concat(not_already_added),
             group: state.group,
-            everyone: everyone.concat([notthatguy])
+            everyone: state.everyone.concat(not_already_added)
         }
     default:
         return state;
@@ -70,6 +71,3 @@ let b = `
     }
 `
 export const store = createStore(groupbuilding);
-
-export const action = (type, arg) => () => (typeof arg == "object") ? store.dispatch(Object.assign({type}, {arg})) : store.dispatch({type, arg});
-export const dispatch = (type, arg) => action(type, arg)();

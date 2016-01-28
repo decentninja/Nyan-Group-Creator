@@ -1,8 +1,10 @@
 import React from "react"
 import ReactDOM from "react-dom"
 import {people_list, values} from "./dataparsing.js"
-import {store, action, dispatch} from "./store.js"
+import {store} from "./store.js"
 var RadarChart = require("react-chartjs").Radar;
+
+let dispatch = store.dispatch;
 
 
 function colormap(k) {
@@ -18,7 +20,7 @@ function GuyStack({data}) {
         marginTop: data.hover ? -10 : 0
     }
     return (
-        <div draggable="true" onDragStart={action("dragging person", data.id)} onMouseOver={dispatch("select person", data.id)} onMouseOut={dispatch("deselect person")} style={style}>
+        <div draggable="true" onDragStart={dispatch({type: "dragging person", id: data.id})} onMouseOver={dispatch({type: "select person", id: data.id})} onMouseOut={dispatch({type: "deselect person"})} style={style}>
             <span style={{backgroundColor: colormap(data.bestat), margin: 1.5, width: 7, height: 7, borderRadius: 5}}></span>
             {Object.keys(data.values).map((k, i) => {
                 const style = {
@@ -90,12 +92,12 @@ function Groups({groups, unpicked}) {
                         animation: false,
                     }}/>
                 </div>
-                <Bunch className="column" people={group} onDrop={action("move", {to: i})} />
+                <Bunch className="column" people={group} onDrop={dispatch({type: "move_to_group", id: i})} />
                 <div className="column column-20">
-                    <button onClick={action("remove group", {which: i})}>Remove Group</button>
+                    <button onClick={dispatch({type: "remove group", id: i})}>Remove Group</button>
                 </div>
             </div>)}
-            <button onClick={action("add_group")}>Add Group</button>
+            <button onClick={dispatch("add_group")}>Add Group</button>
         </div>
     );
 };
@@ -128,8 +130,8 @@ function App({data}) {
     </div>);
 }
 
-dispatch("add people", people_list);
-dispatch("load localstorage");
+dispatch({type: "load localstorage"});
+dispatch({type: "add people", people: people_list});
 
 function update() {
     ReactDOM.render(<App data={store.getState()} />, document.querySelector(".container"));
