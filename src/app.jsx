@@ -59,7 +59,7 @@ const row = {
 }
 
 // Group or other collection of people
-function Bunch({people, onDrop}) {
+function Bunch({people, onDrop, onDragOver}) {
     let numberofmain = {};
     values.forEach((valuename) => {
         numberofmain[valuename] = 0;
@@ -68,7 +68,7 @@ function Bunch({people, onDrop}) {
         numberofmain[person.bestat]++;
     });
     return (
-        <div onDrop={(e) => onDrop(e)} onDragOver={(e) => e.preventDefault()} className="column" style={row}>
+        <div onDrop={(e) => onDrop(e)} onDragOver={(e) => {e.preventDefault(); if(onDragOver) onDragOver(e)}} className="column" style={row}>
             <div className="column column-10" style={{fontSize: 40, display: "flex", justifyContent: "center", flexDirection: "column"}}>
                 {people.length}
             </div>
@@ -84,12 +84,17 @@ class Groups extends React.Component {
         super(props);
         this.state = JSON.parse(localStorage.getItem("storage")) || {
             groups: [[]],
-            unpicked: props.defaultdata
+            unpicked: props.defaultdata,
+            hovered: null
         }
     }
     save(data) {
         this.setState(data, () => {
-            localStorage.setItem("storage", JSON.stringify(this.state));
+            const saved = {
+                groups: this.state.groups,
+                unpicked: this.state.unpicked
+            };
+            localStorage.setItem("storage", JSON.stringify(saved));
         });
     }
     add_group() {
@@ -104,15 +109,13 @@ class Groups extends React.Component {
             unpicked: this.state.unpicked.concat(removed)
         });
     }
+    getDropData(e) {
+        console.log(e.dataTransfer.getData("text"));
+        return JSON.parse(e.dataTransfer.getData('text'));
+    }
     move(e, to) {
         e.preventDefault(); // Is this needed?
-        let data;
-        try {
-            data = JSON.parse(e.dataTransfer.getData('text'));
-        } catch (e) {
-            console.error(e);
-            return;
-        }
+        let data = this.getDropData(e);
         let notthatguy = (person) => person.id != data.id;
         let groups = this.state.groups.map((group) => group.filter(notthatguy));
         let unpicked = this.state.unpicked.filter(notthatguy);
@@ -125,6 +128,10 @@ class Groups extends React.Component {
             groups,
             unpicked
         });
+    }
+    hover(e, i) {
+        let data = this.getDropData(e);
+        this.setState({hover: {id: data.id, data}});
     }
     render() {
         const largest_skill = Math.max(...values.map((valuename) =>
@@ -144,11 +151,16 @@ class Groups extends React.Component {
                             <RadarChart redraw data={{
                                 labels: values,
                                 datasets: [{
-                                    label: "test",
+                                    label: "Group",
                                     pointColor: "rgba(220, 220, 220, 0)",
                                     pointStrokeColor: "rgba(220, 220, 0, 0)",
                                     data: values.map((valuename) => group.reduce((b, person) => person.values[valuename] + b, 0))
-                                }]
+                                }, (this.state.hover && this.state.hover.id == i ? {
+                                    label: "Group + This Guy",
+                                    pointColor: "rgba(220, 220, 220, 0)",
+                                    pointStrokeColor: "rgba(220, 220, 0, 0)",
+                                    data: values.map((valuename) => group.concat([this.state.hover.data]).reduce((b, person) => person.values[valuename] + b, 0))
+                                } : {})]
                             }} options={{
                                 scaleOverride: true,
                                 scaleSteps: 1,
@@ -158,7 +170,7 @@ class Groups extends React.Component {
                                 animation: false,
                             }}/>
                         </div>
-                        <Bunch className="column" people={group} onDrop={(e) => this.move(e, i)} />
+                        <Bunch className="column" people={group} onDragOver={(e) => this.hover(e, i)} onDrop={(e) => this.move(e, i)} />
                         <div className="column column-10">
                             <button onClick={() => this.remove_group(i)}>Remove</button>
                         </div>
