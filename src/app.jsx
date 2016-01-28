@@ -106,11 +106,11 @@ function Groups({groups, unpicked}) {
  
 function App({data}) {
     return (<div>
-        <h1>Group Creator</h1>
+        <h1>Nyan Group Creator</h1>
         <div className="row">
             <div className="column">
                 <p>
-                    Group Creator is a visual and interactive tool for creating groups from quantitative data. Drag and drop member, represented as colored sticks into groups and see the update realtime. You can at any moment undo you actions with ctrl/cmd-z. All data is saved in your browser (local storage).
+                    Nyan Group Creator is a visual and interactive tool for creating groups from quantitative data. Drag and drop members, represented as colored sticks into groups and see the update realtime. All data is saved in your browser (local storage). This application only works in latest Chrome or Chromium, sorry.
                 </p>
             </div>
             <table className="column column-60">
