@@ -106,7 +106,7 @@ function Groups({groups, unpicked}) {
  
 function App({data}) {
     return (<div>
-        <h1>Nyan Group Creator</h1>
+        <h1>Nyan Group Creator<span style={{fontSize: "30%", marginLeft: 10}}>By Andreas Linn</span></h1>
         <div className="row">
             <div className="column">
                 <p>
