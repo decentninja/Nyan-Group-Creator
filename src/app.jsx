@@ -68,7 +68,7 @@ function Groups({groups, unpicked}) {
                 0)))));
     return (
         <div>
-            <h2>Unpicked</h2>
+            <h2>Roster</h2>
             <div className="row" onDragOver={(e) => e.preventDefault()} onDrop={() => dispatch({type: "drop person", on: "unpicked"})}>
                 <Bunch people={unpicked}/>
             </div>
@@ -110,23 +110,31 @@ function App({data}) {
         <div className="row">
             <div className="column">
                 <p>
-                    Nyan Group Creator is a visual and interactive tool for creating groups from quantitative data. Drag and drop members, represented as colored sticks into groups and see the update realtime. All data is saved in your browser (local storage). This application only works in latest Chrome or Chromium, sorry.
+                    Nyan Group Creator is a visual and interactive tool for creating groups from quantitative data created as an assignment for the course DH2321 at KTH. Drag and drop members, represented as colored sticks into groups. The ID at bottom of each stack are from the raw input data and are used when comparing results from different tools. All data is saved in your browser, even when you close the tab (localstorage). This application is only known to work in the latest release of Chrome. No there are currently no way to input you own data aside from hacks (localstorage?). The application will be open sourced on <a href="http://github.com/decentninja/nyan-group-createor">github.com/decentninja/nyan-group/creator</a> as soon as the deadline for the assignment has passed.
                 </p>
             </div>
-            <table className="column column-60">
-                <tbody style={{fontSize: "80%"}}>
-                    <tr>
-                        {values.map((valuename) => 
-                            <td key={valuename} style={{padding: 3, backgroundColor: colormap(valuename)}}></td>
-                        )}
-                    </tr>
-                    <tr>
-                        {values.map((valuename) => 
-                            <td key={valuename} style={{padding: 3}}>{valuename}</td>
-                        )}
-                    </tr>
-                </tbody>
-            </table>
+            <div className="column column-50">
+                <table>
+                    <tbody style={{fontSize: "80%"}}>
+                        <tr>
+                            {values.map((valuename) => 
+                                <td key={valuename} style={{padding: 3, backgroundColor: colormap(valuename)}}></td>
+                            )}
+                        </tr>
+                        <tr>
+                            {values.map((valuename) => 
+                                <td key={valuename} style={{padding: 3}}>{valuename}</td>
+                            )}
+                        </tr>
+                    </tbody>
+                </table>
+                <p>
+                    The focus of the visualization is to showcase group balance and difference in total skill. This allows you to create groups where as many students as possible have someone to learn from, someone to teach and feel like they are on the same total skill level so that they are not dragged down by anyone. 
+                </p>
+                <p>
+                    Happy Nyan-Grouping! (Maybe not the best catchphrase, I have to work on that one.)
+                </p>
+            </div>
         </div>
         <Groups groups={data.groups} unpicked={data.unpicked} />
     </div>);
