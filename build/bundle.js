@@ -247,7 +247,12 @@
 	        _react2.default.createElement(
 	            "h1",
 	            null,
-	            "Nyan Group Creator"
+	            "Nyan Group Creator",
+	            _react2.default.createElement(
+	                "span",
+	                { style: { fontSize: "30%", marginLeft: 10 } },
+	                "By Andreas Linn"
+	            )
 	        ),
 	        _react2.default.createElement(
 	            "div",
