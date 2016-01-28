@@ -3,14 +3,16 @@
   "version": "1.0.0",
   "main": "src/app.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
+    "test": "webpack --config webpack-test.config.js && nodeunit build/spec.js",
     "build": "webpack",
-    "dev": "webpack-dev-server"
+    "watch": "webpack --watch",
+    "preview": "webpack-dev-server"
   },
   "private": true,
   "dependencies": {
     "chart.js": "^1.0.2",
     "milligram": "^1.0.3",
+    "nodeunit": "^0.9.1",
     "normalize.css": "^3.0.3",
     "react": "^0.14.6",
     "react-chartjs": "^0.6.0",
