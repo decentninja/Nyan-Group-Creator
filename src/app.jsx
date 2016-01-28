@@ -20,7 +20,7 @@ function GuyStack({data}) {
         marginTop: data.hover ? -10 : 0
     }
     return (
-        <div draggable="true" onDragStart={dispatch({type: "drag person", person: data})} onMouseOver={dispatch({type: "select person", person: data})} onMouseOut={dispatch({type: "deselect person"})} style={style}>
+        <div draggable="true" onDragStart={() => dispatch({type: "drag person", person: data})} onMouseOver={() => dispatch({type: "select person", person: data})} onMouseOut={() => dispatch({type: "deselect person"})} style={style}>
             <span style={{backgroundColor: colormap(data.bestat), margin: 1.5, width: 7, height: 7, borderRadius: 5}}></span>
             {Object.keys(data.values).map((k, i) => {
                 const style = {
@@ -49,12 +49,12 @@ function Bunch({people}) {
         numberofmain[person.bestat]++;
     });
     return (
-        <div onDragOver={(e) => ononone.preventDefault()} className="column" style={row}>
+        <div  className="column" style={row}>
             <div className="column column-10" style={{fontSize: 40, display: "flex", justifyContent: "center", flexDirection: "column"}}>
                 {people.length}
             </div>
             <div className="column column-60" style={row}>
-                {people.length == 0 ? "Empty G;roup. Drag people (colored sticks) here." : people.sort((a, b) => 10000 * (b.level - a.level) + (b.id - a.id)).map((person) => <GuyStack key={person.id} data={person}/>)}
+                {people.length == 0 ? "Empty Group. Drag people (colored sticks) here." : people.sort((a, b) => 10000 * (b.level - a.level) + (b.id - a.id)).map((person) => <GuyStack key={person.id} data={person}/>)}
             </div>
         </div>
     );
@@ -69,9 +69,9 @@ function Groups({groups, unpicked}) {
     return (
         <div>
             <h2>Unpicked</h2>
-            <div className="row">
-                <Bunch people={unpicked} onDrop={(e) => {e.preventDefault(e); dispatch("drop person", {on: "unpicked"})}} />
-                </div>
+            <div className="row" onDragOver={(e) => e.preventDefault()} onDrop={() => dispatch({type: "drop person", on: "unpicked"})}>
+                <Bunch people={unpicked}/>
+            </div>
             <h2>Groups</h2>
             {groups.length == 0 ? "No groups yet. Press ADD GROUP." : groups.map((group, i) => <div key={i} className="row" style={{marginBottom: 10}}>
                 <div className="column column-20">
@@ -92,12 +92,14 @@ function Groups({groups, unpicked}) {
                         animation: false,
                     }}/>
                 </div>
-                <Bunch className="column" people={group} onDrop={dispatch({type: "drop person", on: i})} />
+                <div className="column" onDragOver={(e) => e.preventDefault()} onDrop={() => dispatch({type: "drop person", on: i})}>
+                    <Bunch people={group} />
+                </div>
                 <div className="column column-20">
-                    <button onClick={dispatch({type: "remove group", id: i})}>Remove Group</button>
+                    <button onClick={() => dispatch({type: "remove group", id: i})}>Remove Group</button>
                 </div>
             </div>)}
-            <button onClick={dispatch("add_group")}>Add Group</button>
+            <button onClick={() => dispatch({type: "add group"})}>Add Group</button>
         </div>
     );
 };

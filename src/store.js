@@ -9,12 +9,13 @@ const default_state = {
 };
 
 export function groupbuilding(state=default_state, action) {
+    console.log(action);
     switch(action.type) {
     case "add people":
         const not_already_added = action.people.filter((person) => state.everyone.filter((other) => other.id == person.id).length == 0);
         return {
             unpicked: state.unpicked.concat(not_already_added),
-            group: state.group,
+            groups: state.groups,
             everyone: state.everyone.concat(not_already_added)
         }
     case "load from localstorage":
@@ -52,6 +53,12 @@ export function groupbuilding(state=default_state, action) {
         return Object.assign({}, state, {
             groups: state.groups.map((group) => group.map(hoverate)),
             unpicked: state.unpicked.map(hoverate)
+        });
+    case "deselect person":
+        const dehover = (person) => Object.assign({}, person, {hover: undefined});
+        return Object.assign({}, state, {
+            groups: state.groups.map((group) => group.map(dehover)),
+            unpicked: state.unpicked.map(dehover)
         });
     default:
         return state;

@@ -93,7 +93,7 @@ export const values = [
 ];
 
 let n = 0;
-export const data = raw.split("\n").map((row, j) => {
+export const people_list = raw.split("\n").map((row, j) => {
     var obj = {
         id: n++,
         values: {}
