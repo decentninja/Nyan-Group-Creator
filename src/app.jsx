@@ -132,7 +132,7 @@ function App({data}) {
     </div>);
 }
 
-dispatch({type: "load localstorage"});
+dispatch({type: "load from localstorage"});
 dispatch({type: "add people", people: people_list});
 
 function update() {
