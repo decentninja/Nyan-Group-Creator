@@ -20,7 +20,7 @@ function GuyStack({data}) {
         marginTop: data.hover ? -10 : 0
     }
     return (
-        <div draggable="true" onDragStart={dispatch({type: "dragging person", id: data.id})} onMouseOver={dispatch({type: "select person", id: data.id})} onMouseOut={dispatch({type: "deselect person"})} style={style}>
+        <div draggable="true" onDragStart={dispatch({type: "drag person", person: data})} onMouseOver={dispatch({type: "select person", id: data.id})} onMouseOut={dispatch({type: "deselect person"})} style={style}>
             <span style={{backgroundColor: colormap(data.bestat), margin: 1.5, width: 7, height: 7, borderRadius: 5}}></span>
             {Object.keys(data.values).map((k, i) => {
                 const style = {
@@ -70,7 +70,7 @@ function Groups({groups, unpicked}) {
         <div>
             <h2>Unpicked</h2>
             <div className="row">
-                <Bunch people={unpicked} onDrop={(e) => {e.preventDefault(e); dispatch("move", {to: "unpicked"})}} />
+                <Bunch people={unpicked} onDrop={(e) => {e.preventDefault(e); dispatch("drop person", {on: "unpicked"})}} />
                 </div>
             <h2>Groups</h2>
             {groups.length == 0 ? "No groups yet. Press ADD GROUP." : groups.map((group, i) => <div key={i} className="row" style={{marginBottom: 10}}>
@@ -92,7 +92,7 @@ function Groups({groups, unpicked}) {
                         animation: false,
                     }}/>
                 </div>
-                <Bunch className="column" people={group} onDrop={dispatch({type: "move_to_group", id: i})} />
+                <Bunch className="column" people={group} onDrop={dispatch({type: "drop person", on: i})} />
                 <div className="column column-20">
                     <button onClick={dispatch({type: "remove group", id: i})}>Remove Group</button>
                 </div>
